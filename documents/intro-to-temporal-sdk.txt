@@ -1,0 +1,71 @@
+What programming skills and experiences are useful when using the TypeScript SDK?
+
+You can start working with the SDK with only TypeScript knowledge. Temporal abstracts much of the complexity of distributed systems, but to unlock its full potential, having a broad base of knowledge will help you design more efficient and resilient systems.
+
+    Core JavaScript or TypeScript knowledge
+        Required
+            JavaScript syntax and structure, including variable declarations using let, const, and var.
+            Basic data types, such as number, string, boolean, null, and undefined.
+            Operators and control statements.
+            Basic input/output (I/O).
+            Familiarity with defining classes, constructors, properties, and methods.
+            Knowledge of how to use import and export for module-based development, which is crucial for organizing larger Temporal applications.
+            Familiarity with function declarations, arrow functions, and function types.
+            Understanding of modern ECMAScript features such as promises and async/await.
+            Knowledge of how to configure TypeScript projects using tsconfig.json, especially if you need to adjust settings specific to your Temporal project or integrate with other tools.
+        Useful
+            Proficiency in TypeScript, including understanding type annotations, interfaces, and generics.
+            Familiarity with object-oriented programming concepts like inheritance, encapsulation, and polymorphism.
+            Understanding of composite types like Array<T>, Promise<T>, and { [key: string]: T}.
+            Basic understanding of decorators.
+            Familiarity with Node.js because the SDK uses the Node.js runtime.
+    Tools
+        Required
+            Package managers, such as npm, pnpm, or yarn.
+            An integrated development environment, such as Visual Studio Code (VS Code) or WebStorm, both of which also have built-in debuggers.
+        Useful
+            Testing tools, such as Jest or Mocha and Chai.
+            Source control systems (such as Git) and source control platforms (such as GitHub, GitLab, or Bitbucket).
+    Other useful knowledge
+        Testing and production
+            Unit testing, integration testing, debugging, and performance profiling tools.
+            CI/CD practices and tools.
+        Distributed systems
+            Event-driven architecture, eventual consistency, partitioning, and replication.
+            Stateful versus stateless processes.
+Where can I find code samples?
+
+Code samples are integrated into this developer’s guide. You can find those code samples in the temporalio/documentation-samples-typescript repository on GitHub.
+
+Additional TypeScript code samples are in the temporalio/samples-typescript repository.
+What are other resources for learning how to use the TypeScript SDK?
+
+Further resources for learning how to use the SDK include the following:
+
+    TypeScript 101 with TypeScript: Our free introductory course.
+    Building Reliable Distributed Systems in Node.js: An introduction to Temporal and its value through a sample web app, temporal.menu.
+    The TypeScript SDK YouTube playlist.
+    Tutorials
+        Build a subscription workflow with Temporal and TypeScript
+        Choose Your Own Adventure Bot walkthrough in TypeScript
+    Blog posts
+        How Durable Execution Works
+        Temporal for VS Code
+        Using Temporal as a Node.js Task Queue
+        Caching API Requests with Long-Lived Workflows
+        REST APIs for every Temporal Workflow in one line of code
+        1.0.0 release of the Temporal TypeScript SDK
+        How we use V8 isolates to enforce Workflow determinism
+
+Where can I get help with using the TypeScript SDK?
+
+    #typescript-sdk channel in Slack
+    Community Forum
+
+How to follow updates to the TypeScript SDK
+
+    The Temporal newsletter includes major SDK updates.
+    GitHub Releases has all SDK releases. It also has a feed that can be added to a feed reader or converted to emails: https://github.com/temporalio/sdk-typescript/releases.atom.
+
+How to contribute to the TypeScript SDK
+The Temporal TypeScript SDK is MIT licensed, and contributions are welcome. Please review our contribution guidelines.

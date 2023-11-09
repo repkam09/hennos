@@ -1,0 +1,72 @@
+Title: Intro to Temporal Architecture and Essential Metrics
+Author: Nils Lundquist
+
+Tagline: Learn from a Temporal consulting expert. Discover how to scale and monitor Temporal's services and gain insights into running your own Temporal cluster. 
+
+Text: 
+
+Managing your own Temporal cluster is a daunting task. Between the four core services, the myriad of metrics to monitor, and a separate persistence service, it's a sizeable undertaking for any team. This post begins a new series that will review the work involved in hosting Temporal yourself and try to demystify it.
+
+Running your own cluster is not an effort that should be undertaken lightly. Unless your organization has a mature operations department with resources available to monitor & administer the cluster, you may find yourself wishing you'd avoided this work and just opted to use Temporal Cloud instead.
+
+However, if you need to run your cluster in-house due to data ownership regulations, uptime guarantees, or other organizational mandates, we hope this series will help uncover and resolve the common caveats of self-hosting Temporal.
+
+This article starts the series off by reviewing Temporal's overall service architecture and some important cluster concepts & metrics. Being familiar with the different Temporal subsystems and monitoring their related logs and metrics is essential to administering them.
+
+Architecture of Temporal
+
+Each Temporal Cluster is made of a group of 4 core services - Frontend, Matching, History, and Worker - plus a database:
+Intro to Temporal Architecture and Essential Metrics
+
+Each of these services can be scaled independently of the others to meet the unique performance requirements of your cluster's specific workload. The differing responsibilities of the services inform what sort of hardware they're typically bottlenecked by and under what conditions they should be scaled. It's almost always the case that Temporal can be scaled to the point where the ultimate bottleneck becomes the limitations of whatever underlying persistence technology is used in a deployment.
+Frontend Service
+
+The frontend service is a stateless service responsible for providing the client-facing gRPC API of the Temporal cluster. Its primary function is to serve as a pass-through to the other services. As such, it implements the rate-limiting, authorization, validation, and routing of all inbound calls.
+
+Inbound calls include communication from the Temporal Web UI, the tctl CLI tool, worker processes, and Temporal SDK connections.
+
+The nodes hosting this service typically benefit from additional compute.
+Matching Service
+
+The matching service is responsible for dispatching tasks to workers efficiently by managing and caching operations on task queues. The different task queues of the cluster are distributed among the shards of the matching service.
+
+A notable optimization the matching service provides is called "synchronous matching". In the case that the host happens to have a long-polling worker waiting for a new task at the same the matching host receives a new task, that task is immediately dispatched to the worker. This immediate “synchronous matching" avoids having to persist that task, lowering the overall persistence service load and lowering latency for tasks. Administrators should monitor the "sync match rate" of their cluster as it indicates how often synchronous matching is taking place and endeavor to keep it as high as possible by scaling workers as needed.
+
+The hosts of this service typically benefit from additional memory.
+History Service
+
+The history service is responsible for writing workflow execution data to the persistence service efficiently and acting as a cache for workflow history. The workflow executions of the cluster are distributed among the shards of the history service. When the history service progresses a workflow by saving its updated history to persistence, it also enqueues a task with the updated history to the task queue. From there, a worker can poll for more work - receiving that task with the new history and will continue progressing the workflow.
+
+The hosts of this service typically benefit from additional memory. This service is particularly memory intensive.
+Worker Service
+
+The cluster worker hosts are responsible for running cluster background workflow tasks. These background workflows support tctl batch operations, archiving, and inter-cluster replication, among other functionality.
+
+There isn’t a great deal of information regarding the scaling requirements of this service, but I’ve seen it suggested this service needs a balance of compute and memory and that having 2 hosts is a good starting place for most clusters. However, the exact performance characteristics will depend on which internal background workflows are most utilized by your cluster.
+Importance of History Shards
+
+History shards are an especially important cluster configuration parameter as they represent an upper bound on the number of concurrent persistence operations that can be performed, and critically, this parameter currently cannot be modified after the initial cluster setup. As such, it's important to select a number of history shards sufficient for a theoretical maximum level of concurrent load that your cluster may reach.
+
+It may be tempting to immediately choose an especially large number of history shards, but doing so comes with additional costs. Keeping track of the additional shards increases CPU & memory consumption on History hosts and increases pressure on the persistence service since each additional shard represents an additional potential concurrent operation on the persistence cluster.
+
+Temporal recommends 512 shards for small production clusters and mentions that it's rare for even large production clusters to exceed 4096 shards. However, the only way to concretely determine if a particular number of history shards is suitable for any given high-load scenario is by testing to confirm it.
+
+Importance of Retention
+
+Every Temporal workflow keeps a history of the events it processes in the Persistence database. As the amount of data in any database grows larger it eventually exhausts available resources, and the performance of that database begins to degrade. Scaling the database, either horizontally or vertically, improves the situation; however, eventually, data must be removed or shifted to archives to avoid scaling the DB indefinitely. To maintain high performance for actively executing workflows, Temporal deletes the history of stopped workflows after a configurable Retention Period. Temporal has a minimum retention of one day.
+
+If your use case doesn't have particularly high load requirements, you may be able to afford to raise the retention and leave this stopped workflow data around for a long time, potentially months. This can be convenient as a source of truth about the outcomes of the completed business processes represented by your stopped workflows.
+
+Even though the event data must eventually be removed from the primary persistence database, it's possible to configure Temporal to preserve the history in an Archival storage layer, typically S3. Preservation allows Temporal to persist workflow data indefinitely without impacting cluster performance. The workflow history kept in the Archival storage layer can still be queried via the Temporal CLI & Web client, but with lower performance than the primary Persistence service.
+Essential Metrics & Monitoring
+
+To keep these four services and the database all operating smoothly, Temporal exports a large variety of Prometheus-based metrics to monitor. There are two categories of metrics to monitor - metrics exported by the Cluster services and metrics exported from your clients & worker nodes running the Temporal SDK for your language.
+
+Cluster metrics are tagged with type, operation & namespace, which help distinguish activity from different services, namespaces & operations.
+
+The table below shows a variety of important Cluster & SDK metrics and how they can be applied in different PromQL queries to monitor different aspects of cluster performance in tools like Grafana.
+
+Hope the information on the important architecture concepts, configuration parameters & metrics collected above helps you get your organization's Temporal cluster provisioning off on the right foot! Join us in the next entry in this blog series, where we'll investigate the benefits of choosing different database technologies for your persistence service.
+Need more Temporal help?
+
+Our Temporal Consulting experts have experience implementing and optimizing Temporal on an enterprise scale. Schedule a free consultation with our software architects to talk through your Temporal implementation and see if we’d be a good fit for your project.
