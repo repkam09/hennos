@@ -1,0 +1,29 @@
+# Hennos: Langchain Edition
+
+To install dependencies:
+
+```bash
+npm install
+```
+
+We use Redis for saving chat context and embedded documents
+
+```bash
+docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
+```
+
+We use Temporal workflows for processing documents and chat completions
+
+Install the temporal cli: <https://docs.temporal.io/cli>
+
+```bash
+temporal server start-dev
+```
+
+See the local temporal dashboard at: <http://localhost:8233/namespaces/default/workflows>
+
+To run both Redis and Temporal you can use
+
+```bash
+npm run deps
+```
