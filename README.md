@@ -1,5 +1,7 @@
 # Hennos: Langchain Edition
 
+Note: This is not at all complete yet. The current version of this bot can be found at: https://github.com/repkam09/telegram-gpt-bot
+
 To install dependencies:
 
 ```bash
