@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { Client, Connection } from "@temporalio/client";
 import { stat, readdir } from "node:fs/promises"
 import { createHash } from "node:crypto"
@@ -6,7 +8,7 @@ import mime from "mime-types"
 import path from "node:path";
 
 const connection = await Connection.connect({
-    address: "localhost:7233"
+    address: process.env.TEMPORAL_SERVER_ADDRESS
 });
 
 const client = new Client({

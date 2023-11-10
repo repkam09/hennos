@@ -22,7 +22,7 @@ Install the temporal cli: <https://docs.temporal.io/cli>
 temporal server start-dev
 ```
 
-See the local temporal dashboard at: <http://localhost:8233/namespaces/default/workflows>
+See the local temporal dashboard at: <http://localhost:8235/namespaces/default/workflows>
 
 To run both Redis and Temporal you can use
 

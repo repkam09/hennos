@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { Client, Connection } from "@temporalio/client";
 import { ChatCompletionQueue, incomingMessageSignal } from './workflows/index.ts';
 
@@ -7,7 +9,7 @@ if (process.argv.length === 2) {
 }
 
 const connection = await Connection.connect({
-    address: "localhost:7233"
+    address: process.env.TEMPORAL_SERVER_ADDRESS
 });
 
 const client = new Client({

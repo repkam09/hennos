@@ -9,7 +9,7 @@ type ParseDocumentInput = {
     path: string
 };
 
-const { parsePlainText, parsePDF } = workflow.proxyActivities<typeof activities>({
+const { parsePlainText, parsePDF, parseTypeScript } = workflow.proxyActivities<typeof activities>({
     startToCloseTimeout: "1 minute",
 });
 
@@ -23,6 +23,11 @@ export async function ParseDocument(
         }
         
         case 'video/mp2t': {
+            return parseTypeScript(args.chatId, args.userId, args.document, args.path)
+            break
+        }
+
+        case 'text/markdown': {
             return parsePlainText(args.chatId, args.userId, args.document, args.path)
             break
         }

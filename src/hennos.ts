@@ -15,7 +15,7 @@ async function initialize() {
     await redis.connect()
 
     const connection = await Connection.connect({
-        address: "localhost:7233"
+        address: process.env.TEMPORAL_SERVER_ADDRESS
     });
 
     const client = new Client({
@@ -24,7 +24,9 @@ async function initialize() {
 
     await LangChainLLM.initialize()
 
-    telegram(client)
+    if (process.env.ENABLE_TELEGRAM) {
+        telegram(client)
+    }
 
     const worker = await TemporalWorker.instance()
     await worker.run()

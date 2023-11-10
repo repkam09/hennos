@@ -5,7 +5,9 @@ export class BotInstance {
 
     static instance(): TelegramBot {
         if (!BotInstance.bot) {
-            BotInstance.bot = new TelegramBot(process.env.TELEGRAM_BOT_KEY!, { polling: true });
+            if (process.env.ENABLE_TELEGRAM) {
+                BotInstance.bot = new TelegramBot(process.env.TELEGRAM_BOT_KEY!, { polling: true });
+            }
         }
 
         return BotInstance.bot;

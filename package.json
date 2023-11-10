@@ -18,7 +18,7 @@
   "type": "module",
   "scripts": {
     "start": "ts-node-esm src/hennos.ts",
-    "temporal": "temporal server start-dev",
+    "temporal": "temporal server start-dev --port 7235 --ui-port 8235",
     "ingest": "ts-node-esm src/ingest.ts",
     "chat": "ts-node-esm src/chat.ts",
     "redis": "docker stop redis-stack-server && docker rm redis-stack-server && docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest",

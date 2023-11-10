@@ -10,7 +10,7 @@ export class TemporalWorker {
     static async instance(): Promise<Worker> {
         if (!TemporalWorker.worker) {
             const connection = await NativeConnection.connect({
-                address: "localhost:7233",
+                address: process.env.TEMPORAL_SERVER_ADDRESS,
             });
             const worker = await Worker.create({
                 connection,
