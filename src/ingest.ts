@@ -49,6 +49,11 @@ if (process.argv.length === 2) {
 }
 
 async function ingest(basepath: string) {
+    const stats = await stat(basepath)
+    if (!stats.isDirectory()) {
+        return parseDocument(basepath)
+    }
+    
     const contents = await readdir(basepath)
     contents.forEach(async (content) => {
         const current = path.join(basepath, content)
