@@ -8,6 +8,8 @@ import { ChatCompletionQueue, incomingMessageSignal } from './workflows/chat-com
 import { TemporalWorker } from "./singletons/worker.ts"
 import { ParseDocument } from './workflows/index.ts';
 import { LangChainLLM } from './singletons/llm.ts';
+import { processDocuments } from './workflows/parse-document/activities/common.ts';
+import { Document } from 'langchain/document';
 
 
 async function initialize() {
@@ -27,6 +29,9 @@ async function initialize() {
     if (process.env.ENABLE_TELEGRAM) {
         telegram(client)
     }
+
+    // Cheap and dirty way of populating the document embedding store early on 
+    processDocuments([new Document({ pageContent: "Hennos is a Telegram chat bot that uses the OpenAI API to respond to user queries" })])
 
     const worker = await TemporalWorker.instance()
     await worker.run()
