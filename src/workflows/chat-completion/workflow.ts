@@ -30,7 +30,7 @@ export const incomingMessageSignal = defineSignal<[IncomingMessageSignalInput]>(
 // the args, and workflowId, are based on the users unique Telegram UserID
 export async function ChatCompletionQueue(
     args: ChatCompletionQueueArgs,
-): Promise<void> {
+): Promise<string> {
     const messages: string[] = []
     let hasNewMessage = false
     let debugMode = false
@@ -59,4 +59,6 @@ export async function ChatCompletionQueue(
     // If there were no new messages in the time we were generating our response,
     // respond to the user by their Telegram ChatID
     await respond(args.chatId, result, debugMode);
+
+    return result
 }

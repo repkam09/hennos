@@ -20,7 +20,7 @@ const message = process.argv.splice(2, process.argv.length - 1).join("")
 
 console.log("Input:", message)
 
-client.workflow.signalWithStart(ChatCompletionQueue, {
+const response = await client.workflow.signalWithStart(ChatCompletionQueue, {
     signal: incomingMessageSignal,
     signalArgs: [{
         message,
@@ -37,3 +37,6 @@ client.workflow.signalWithStart(ChatCompletionQueue, {
     taskQueue: 'hennos',
     workflowId: `chat:${89941288}|user:${89941288}|ChatCompletionQueue`,
 });
+
+const result = await response.result()
+console.log("Response:", result)
